@@ -2,9 +2,13 @@
 # {{ ansible_managed }}
 #
 
+from datetime import time
+import hashlib
+import json
 import os
 import sys
-import hashlib
+
+from celery.schedules import crontab
 
 _ROOT_DIR  = os.path.dirname(os.path.abspath(__file__))
 
@@ -20,6 +24,9 @@ DATABASES = { {% for config in postgresql_dbs %}
         'HOST': '{{ config.get('host', localsettings.PG_DATABASE_HOST) }}',
         'PORT': {{ config.get('port', localsettings.get('PG_DATABASE_PORT', 5432)) }},
         'OPTIONS': {{ config.get('options', localsettings.get('PG_DATABASE_OPTIONS', {}))|to_json }},
+        {% if 'django_migrate' in config -%}
+        'MIGRATE': {{ config.django_migrate }},
+        {% endif -%}
     },
 {% endif -%}
 {% endfor %}
@@ -48,9 +55,7 @@ PARTITION_DATABASE_CONFIG = {
 }
 {% endif %}
 
-{% if localsettings.get('UCR_DATABASE_NAME') %}
-UCR_DATABASE_URL = "postgresql://{{ localsettings.PG_DATABASE_USER }}:{{ localsettings.PG_DATABASE_PASSWORD }}@{{ localsettings.PG_DATABASE_HOST }}:{{localsettings.get('PG_DATABASE_PORT')}}/{{ localsettings.UCR_DATABASE_NAME }}"
-{% endif %}
+REPORTING_DATABASES = json.loads('{{ localsettings.REPORTING_DATABASES|to_json }}')
 
 {% if localsettings.get('ICDS_UCR_DATABASE_ALIAS') %}
 ICDS_UCR_DATABASE_ALIAS = "{{ localsettings.ICDS_UCR_DATABASE_ALIAS }}"
@@ -59,8 +64,6 @@ ICDS_UCR_DATABASE_ALIAS = "{{ localsettings.ICDS_UCR_DATABASE_ALIAS }}"
 {% if localsettings.get('ICDS_UCR_TEST_DATABASE_ALIAS') %}
 ICDS_UCR_TEST_DATABASE_ALIAS = "{{ localsettings.ICDS_UCR_TEST_DATABASE_ALIAS }}"
 {% endif %}
-
-CTABLE_BACKENDS = {'SQL': 'ctable.backends.SqlBackend'}
 
 LOG_HOME = '{{ log_home }}'
 COUCH_LOG_FILE = os.path.join(LOG_HOME,"{{ localsettings.DEPLOY_MACHINE_NAME }}-commcarehq.couch.log")
@@ -186,10 +189,19 @@ MOBILE_INTEGRATION_TEST_TOKEN = '{{ localsettings.MOBILE_INTEGRATION_TEST_TOKEN 
 
 ####### For Constructing Global URLs ########
 
-LOCAL_APPS = ('dimagi.utils', 'gunicorn',)
+LOCAL_APPS = (
+    'dimagi.utils',
+    'gunicorn',
+    {% for app in localsettings.get('LOCAL_APPS', []) %}
+    '{{ app }}',
+    {% endfor %}
+)
+
+{% if 'DATADOG_TRACE' in localsettings %}
+DATADOG_TRACE = json.loads('{{ localsettings.DATADOG_TRACE|to_json }}')
+{% endif %}
 
 {% if 'LOCAL_PILLOWS' in localsettings %}
-import json
 LOCAL_PILLOWTOPS = json.loads('{{ localsettings.LOCAL_PILLOWS|to_json }}')
 {% endif %}
 
@@ -316,35 +328,27 @@ XFORMS_PLAYER_URL = "{{ localsettings.XFORMS_PLAYER_URL }}"
 FORMPLAYER_URL = "{{ localsettings.FORMPLAYER_URL }}"
 {% endif %}
 
+{% if 'FORMPLAYER_INTERNAL_AUTH_KEY' in localsettings %}
+FORMPLAYER_INTERNAL_AUTH_KEY = "{{ localsettings.FORMPLAYER_INTERNAL_AUTH_KEY }}"
+{% endif %}
+
 SOIL_BACKEND = "soil.CachedDownload"
 SOIL_DEFAULT_CACHE = "redis"
 
 REPORT_CACHE = 'redis'
 
 
-import imp
-try:
-    imp.find_module('django_redis')
-except ImportError:
-    redis_cache = {
-        'BACKEND': 'redis_cache.cache.RedisCache',
-    {% if 'REDIS_DB' in localsettings %}
-        'LOCATION': '{{ localsettings.REDIS_HOST }}:{{ localsettings.REDIS_PORT }}:{{ localsettings.REDIS_DB }}',
-    {% else %}
-        'LOCATION': '{{ localsettings.REDIS_HOST }}:{{ localsettings.REDIS_PORT }}',
-    {% endif %}
-        'OPTIONS': {},
-    }
-else:
-    redis_cache = {
-        'BACKEND': 'django_redis.cache.RedisCache',
-    {% if 'REDIS_DB' in localsettings %}
-        'LOCATION': 'redis://{{ localsettings.REDIS_HOST }}:{{ localsettings.REDIS_PORT }}/{{ localsettings.REDIS_DB }}',
-    {% else %}
-        'LOCATION': 'redis://{{ localsettings.REDIS_HOST }}:{{ localsettings.REDIS_PORT }}',
-    {% endif %}
-        'OPTIONS': {},
-    }
+redis_cache = {
+    'BACKEND': 'django_redis.cache.RedisCache',
+{% if 'REDIS_DB' in localsettings %}
+    'LOCATION': 'redis://{{ localsettings.REDIS_HOST }}:{{ localsettings.REDIS_PORT }}/{{ localsettings.REDIS_DB }}',
+{% else %}
+    'LOCATION': 'redis://{{ localsettings.REDIS_HOST }}:{{ localsettings.REDIS_PORT }}',
+{% endif %}
+    'OPTIONS': {
+        'PARSER_CLASS': 'redis.connection.HiredisParser',
+    },
+}
 
 CACHES = {
     'default': redis_cache,
@@ -514,7 +518,6 @@ SAVED_EXPORT_ACCESS_CUTOFF = {{ localsettings.SAVED_EXPORT_ACCESS_CUTOFF }}
 {% endif %}
 
 {% if 'MAPS_LAYERS' in localsettings %}
-import json
 MAPS_LAYERS = json.loads('{{ localsettings.MAPS_LAYERS|to_json }}')
 {% endif %}
 
@@ -710,7 +713,10 @@ DAYS_TO_KEEP_DEVICE_LOGS = {{ localsettings.DAYS_TO_KEEP_DEVICE_LOGS }}
 ASYNC_INDICATORS_TO_QUEUE = {{ localsettings.ASYNC_INDICATORS_TO_QUEUE }}
 {% endif %}
 
-{% if localsettings.get('OFF_PEAK_TIME') %}
-from datetime import time
-OFF_PEAK_TIME = (time({{ localsettings.OFF_PEAK_TIME[0] }}), time({{ localsettings.OFF_PEAK_TIME[1] }}))
+{% if localsettings.get('ASYNC_INDICATOR_QUEUE_CRONTAB') %}
+ASYNC_INDICATOR_QUEUE_CRONTAB = crontab(**{{ localsettings.get('ASYNC_INDICATOR_QUEUE_CRONTAB') }})
+{% endif %}
+
+{% if 'MAX_RULE_UPDATES_IN_ONE_RUN' in localsettings %}
+MAX_RULE_UPDATES_IN_ONE_RUN = {{ localsettings.MAX_RULE_UPDATES_IN_ONE_RUN }}
 {% endif %}

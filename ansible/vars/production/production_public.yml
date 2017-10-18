@@ -54,9 +54,7 @@ elasticsearch_cluster_name: 'prodhqes-1.x'
 formplayer_sentry_dsn: '{{ secrets.FORMPLAYER_SENTRY_DSN }}'
  
 # Source paths of certs
-apache2_key_file: '../config/{{ deploy_env }}/ssl/commcarehq.org.key'
-apache2_ca_file: '../config/{{ deploy_env }}/ssl/hq_thawtecabundle.crt'
-apache2_cert_file: '../config/{{ deploy_env }}/ssl/commcarehq.org.crt'
+nginx_key_file: '../config/{{ deploy_env }}/ssl/commcarehq.org.key'
 # Nginx only accepts on cert, so cat the site cert and chain:
 # $ cat commcarehq.org.crt hq_thawtecabundle.crt > commcarehq.org.combined.crt
 nginx_combined_cert_file: '../config/{{ deploy_env }}/ssl/commcarehq.org.combined.crt'
@@ -91,6 +89,8 @@ pgbouncer_pool_mode: transaction
 pg_query_stats: True
 
 formplayer_db_name: formplayer
+formplayer_archive_time_spec: '10m'
+formplayer_purge_time_spec: '8d'
 
 postgresql_dbs:
   - django_alias: default
@@ -119,9 +119,11 @@ postgresql_dbs:
     name: commcarehq_p5
     shards: [820, 1023]
     host: "{{ groups.postgresql.1 }}"
-  - name: "{{localsettings.UCR_DATABASE_NAME}}"
+  - name: commcarehq_ucr
     host: "{{ groups.postgresql.0 }}"
     query_stats: True
+    django_alias: ucr
+    django_migrate: False
   - name: "{{ formplayer_db_name }}"
     host: "{{ groups.postgresql.0 }}"
 
@@ -144,8 +146,8 @@ AMQP_NAME: commcarehq
 
 ufw_private_interface: eth1
 
-etc_host_lines: []
-etc_host_lines_removed: []
+etc_hosts_lines: []
+etc_hosts_lines_removed: []
 
 couch_dbs:
   default:
@@ -198,6 +200,7 @@ localsettings:
   EMAIL_SMTP_PORT: 587
   EMAIL_USE_TLS: yes
   FORMPLAYER_URL: "/formplayer"
+  FORMPLAYER_INTERNAL_AUTH_KEY: "{{ localsettings_private.FORMPLAYER_INTERNAL_AUTH_KEY }}"
   FULLSTORY_ID: "{{ localsettings_private.FULLSTORY_ID }}"
   GREENHOUSE_API_KEY: "{{ localsettings_private.GREENHOUSE_API_KEY }}"
   GMAPS_API_KEY: "{{ localsettings_private.GMAPS_API_KEY }}"
@@ -241,6 +244,8 @@ localsettings:
   REDIS_HOST: "{{ groups.redis.0 }}"
   REDIS_PORT: '6379'
   REMINDERS_QUEUE_ENABLED: True
+  REPORTING_DATABASES:
+    ucr: ucr
   AMAZON_S3_ACCESS_KEY: "{{ localsettings_private.AMAZON_S3_ACCESS_KEY }}"
   AMAZON_S3_SECRET_KEY: "{{ localsettings_private.AMAZON_S3_SECRET_KEY }}"
   SECRET_KEY: "{{ localsettings_private.SECRET_KEY }}"
@@ -261,7 +266,6 @@ localsettings:
   TOUCHFORMS_API_USER: "{{ localsettings_private.TOUCHFORMS_API_USER }}"
   TWO_FACTOR_SMS_GATEWAY: 'corehq.apps.hqwebapp.two_factor_gateways.Gateway'
   TWO_FACTOR_CALL_GATEWAY: 'corehq.apps.hqwebapp.two_factor_gateways.Gateway'
-  UCR_DATABASE_NAME: commcarehq_ucr
   USE_PARTITIONED_DATABASE: True
   WS4REDIS_CONNECTION_HOST: "{{ groups.redis.0 }}"
   XFORMS_PLAYER_URL: "http://{{ groups.touchforms.0 }}:4444/"
