@@ -12,7 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "monolith" do |monolith|
     monolith.vm.hostname = "monolith"
-    monolith.vm.network "private_network", ip: "192.168.33.21"
+    monolith.vm.network "private_network", ip: "174.138.46.39"
     monolith.vm.provider "virtualbox" do |v|
       v.memory = 768
       v.cpus = 1

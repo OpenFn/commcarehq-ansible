@@ -1,15 +1,15 @@
 [webworkers]
-192.168.33.21
+174.138.46.39
 
 [postgresql]
-192.168.33.21 hot_standby_server='192.168.33.22'
+174.138.46.39 hot_standby_server='192.168.33.22'
 
 [postgresql:vars]
 hot_standby_server='192.168.33.22'
 postgresql_replication_slots=['standby1']
 
 [couchdb2]
-192.168.33.21
+174.138.46.39
 192.168.33.22
 192.168.33.23
 
@@ -17,43 +17,43 @@ postgresql_replication_slots=['standby1']
 192.168.33.22
 
 [redis]
-192.168.33.21
+174.138.46.39
 
 [touchforms]
-192.168.33.21
+174.138.46.39
 
 [formplayer]
-192.168.33.21
+174.138.46.39
 
 [celery]
-192.168.33.21
+174.138.46.39
 
 [elasticsearch]
-192.168.33.21 elasticsearch_node_name=es0
+174.138.46.39 elasticsearch_node_name=es0
 
 [proxy]
-192.168.33.21
+174.138.46.39
 
 [rabbitmq]
-192.168.33.21
+174.138.46.39
 
 [zookeeper]
-192.168.33.21
+174.138.46.39
 
 [kafka]
-192.168.33.21 kafka_broker_id=0
+174.138.46.39 kafka_broker_id=0
 
 [pillowtop]
-192.168.33.21
+174.138.46.39
 
 [shared_dir_host]
-192.168.33.21
+174.138.46.39
 
 [riakcs]
-192.168.33.21
+174.138.46.39
 
 [stanchion]
-192.168.33.21
+174.138.46.39
 
 [pg_standby]
-192.168.33.22 hot_standby_master='192.168.33.21' replication_slot='standby1'
+192.168.33.22 hot_standby_master='174.138.46.39' replication_slot='standby1'

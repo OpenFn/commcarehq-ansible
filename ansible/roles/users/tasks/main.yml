@@ -50,4 +50,5 @@
 - name: remove cchq_sudoers
   file: state=absent path=/etc/sudoers.d/cchq_sudoers
 
-- import_tasks: remove_users.yml
+# this kills my shell session and won't let me log back in.
+# - import_tasks: remove_users.yml

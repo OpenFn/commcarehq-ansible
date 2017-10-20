@@ -209,12 +209,12 @@ LOCAL_PILLOWTOPS = json.loads('{{ localsettings.LOCAL_PILLOWS|to_json }}')
 BITLY_LOGIN = '{{ localsettings.BITLY_LOGIN }}'
 BITLY_APIKEY = '{{ localsettings.BITLY_APIKEY }}'
 
-JAR_SIGN = dict(
-    key_store = os.path.join('{{ www_dir }}', "DimagiKeyStore"),
-    key_alias = "{{ localsettings.JAR_KEY_ALIAS }}",
-    store_pass = "{{ localsettings.JAR_STORE_PASS }}",
-    key_pass = "{{ localsettings.JAR_KEY_PASS }}",
-)
+#JAR_SIGN = dict(
+#    key_store = os.path.join('{{ www_dir }}', "DimagiKeyStore"),
+#    key_alias = "{{ localsettings.JAR_KEY_ALIAS }}",
+#    store_pass = "{{ localsettings.JAR_STORE_PASS }}",
+#    key_pass = "{{ localsettings.JAR_KEY_PASS }}",
+#)
 
 #xep
 #GET_URL_BASE  = 'dimagi.utils.web.get_secure_url_base'

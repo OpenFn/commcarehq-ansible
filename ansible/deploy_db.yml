@@ -2,7 +2,7 @@
 - name: Common Database Machine Setup
   hosts:
     - postgresql
-    - couchdb
+    # - couchdb
     - couchdb2
     - redis
     - elasticsearch
@@ -39,31 +39,31 @@
   roles:
     - {role: pg_standby, tags: 'pg_standby'}
 
-- name: Couchdb
-  hosts: couchdb
-  become: true
-  roles:
-    - {role: couchdb, tags: 'couchdb'}
-
-- name: Couchdb log rolling configurations
-  hosts: couchdb
-  become: true
-  roles:
-    - role: ansible-logrotate
-      tags: couchdb
-      logrotate_scripts:
-        - name: "{{ deploy_env }}_couchdb"
-          path: "{{ couch_log_dir }}/*.log"
-          options:
-            - daily
-            - size 100M
-            - rotate 10
-            - missingok
-            - compress
-            - delaycompress
-            - copytruncate
-            - nocreate
-            - notifempty
+# - name: Couchdb
+#   hosts: couchdb
+#   become: true
+#   roles:
+#     - {role: couchdb, tags: 'couchdb'}
+#
+# - name: Couchdb log rolling configurations
+#   hosts: couchdb
+#   become: true
+#   roles:
+#     - role: ansible-logrotate
+#       tags: couchdb
+#       logrotate_scripts:
+#         - name: "{{ deploy_env }}_couchdb"
+#           path: "{{ couch_log_dir }}/*.log"
+#           options:
+#             - daily
+#             - size 100M
+#             - rotate 10
+#             - missingok
+#             - compress
+#             - delaycompress
+#             - copytruncate
+#             - nocreate
+#             - notifempty
 
 - name: Couchdb 2.0
   hosts: couchdb2

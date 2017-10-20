@@ -18,7 +18,10 @@
 - include: deploy_proxy.yml
 - include: deploy_shared_dir.yml
 - include: deploy_webworker.yml
-- include: deploy_touchforms.yml
+# ==============================
+# Only necessary for sms surveys
+# - include: deploy_touchforms.yml
+# ==============================
 - include: deploy_formplayer.yml
 - include: deploy_mailrelay.yml
 - include: deploy_tmpreaper.yml
