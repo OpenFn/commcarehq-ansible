@@ -22,6 +22,8 @@ cchq_user: cchq
 dev_group: dimagidev
 dev_users:
   present:
+    - cchq
+  absent:
     - astone
     - biyeun
     - cellowitz
@@ -44,8 +46,6 @@ dev_users:
     - skelly
     - sravfeyn
     - wpride
-    - cchq
-  absent:
     - preseed
     - twymer
     - tsheffels
