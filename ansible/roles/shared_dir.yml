@@ -5,6 +5,7 @@
   become: yes
   vars_files:
     - shared_dir/vars/main.yml
+    - ../group_vars/all.yml
   tasks:
     - include: shared_dir/tasks/install.yml
     - include: shared_dir/tasks/setup_host.yml
@@ -14,6 +15,7 @@
   become: yes
   vars_files:
     - shared_dir/vars/main.yml
+    - ../group_vars/all.yml
   tasks:
     - include: shared_dir/tasks/install.yml
     - include: shared_dir/tasks/setup_client.yml
