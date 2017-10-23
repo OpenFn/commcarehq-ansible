@@ -1,3 +1,6 @@
 [submodule "ansible/roles/ansible-logrotate"]
 	path = ansible/roles/ansible-logrotate
 	url = https://github.com/nickhammond/ansible-logrotate.git
+[submodule "commcare-hq-deploy"]
+	path = commcare-hq-deploy
+	url = git@github.com:dimagi/commcare-hq-deploy.git
