@@ -23,6 +23,8 @@ dev_group: dimagidev
 dev_users:
   present:
     - cchq
+    - tdowns
+    - rmckinley
   absent:
     - astone
     - biyeun

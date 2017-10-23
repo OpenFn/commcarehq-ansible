@@ -1,10 +1,10 @@
 ---
 
-- name: Keystore
-  hosts: webworkers
-  become: true
-  roles:
-    - {role: keystore, tags: keystore}
+# - name: Keystore
+#   hosts: webworkers
+#   become: true
+#   roles:
+#     - {role: keystore, tags: keystore}
 
 - name: Webworkers
   hosts: webworkers
