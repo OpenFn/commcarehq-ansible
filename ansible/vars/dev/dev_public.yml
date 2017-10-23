@@ -46,6 +46,7 @@ dev_users:
   present:
     - cchq
     - tdowns
+    - saga
     - rmckinley
   absent:
     - dmiller
@@ -274,6 +275,7 @@ localsettings:
   PG_DATABASE_NAME: commcarehq
   PG_DATABASE_PASSWORD: commcarehq
   PG_DATABASE_USER: commcarehq
+  PG_DATABASE_PORT: 6432
 #  PILLOWTOP_MACHINE_ID:
 #  PILLOW_RETRY_QUEUE_ENABLED:
   REDIS_DB: '0'
