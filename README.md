@@ -1,3 +1,9 @@
+# To add to ansible or readme or something...
+1. Run "fab dev deploy --show=debug -u ansible"
+2. add "ansible ALL=(ALL) NOPSSWD:ALL
+3. Run "cd ~cchq/www/dev/current && chown -R cchq.cchq python_env"
+4. Rory's note: this is because ansible does not do the right thing
+
 # Ansible deployment orchestration and configuration management
 
 [![Build
@@ -107,7 +113,7 @@ $ python -m smtpd -n -c DebuggingServer 0.0.0.0:1025
   * Or on a Mac, `$ sudo /Library/StartupItems/VirtualBox/VirtualBox restart`
 * Attempt to start the VM
   * If the error message is: `VT-x needs to be enabled in BIOS`
-For the Lenovo T440s: 
+For the Lenovo T440s:
   * Restart machine, press Enter during startup
   * Navigate to Security -> Virtualization
     * Turn both settings on
