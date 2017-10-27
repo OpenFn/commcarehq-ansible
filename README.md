@@ -1,6 +1,6 @@
 # To add to ansible or readme or something...
 1. Run "fab dev deploy --show=debug -u ansible"
-2. add "ansible ALL=(ALL) NOPSSWD:ALL
+2. add "ansible ALL=(ALL) NOPSSWD:ALL" to visudo
 3. Run "cd ~cchq/www/dev/current && chown -R cchq.cchq python_env"
 4. Rory's note: this is because ansible does not do the right thing
 

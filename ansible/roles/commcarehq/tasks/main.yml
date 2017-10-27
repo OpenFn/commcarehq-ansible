@@ -24,7 +24,7 @@
 
 # Do not update source unless you're cloning for the first time
 
-- name: register git repo
+- name: register cchq git repo
   stat: path="{{ code_home }}/.git"
   register: gitdir
 
@@ -51,17 +51,6 @@
         owner: "{{ cchq_user }}"
         group: "{{ cchq_user }}"
 
-    - name: install pip requirements
-      become: true
-      with_items: "{{ commcarehq_requirements }}"
-      pip:
-        requirements: "{{ code_home }}/requirements/{{ item }}"
-        virtualenv: "{{ virtualenv_source }}"
-        chdir: "{{ code_home }}"
-      tags:
-        - slow
-      when: not testing|default(False)
-
     - name: chown clone
       become: true
       file:
@@ -75,6 +64,23 @@
         - "{{ virtualenv_source }}"
 
   when: not gitdir.stat.exists
+
+- name: install cchq pip requirements
+  become: true
+  with_items: "{{ commcarehq_requirements }}"
+  pip:
+    requirements: "{{ code_home }}/requirements/{{ item }}"
+    # ==========================================================================
+    # Previously, this was: `virtualenv: "{{ virtualenv_source }}"` but didn't
+    # get the deps in the right place for touchforms since it's time dependent.
+    # Consider setting a variable for the whole ansible run.
+    # virtualenv: "{{ virtualenv_home }}"
+    virtualenv: "{{ virtualenv_home }}"
+    # ==========================================================================
+    chdir: "{{ code_home }}"
+  tags:
+    - slow
+  when: not testing|default(False)
 
 - name: Upgrade setuptools
   pip:

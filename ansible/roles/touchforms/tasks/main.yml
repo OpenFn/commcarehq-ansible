@@ -1,3 +1,6 @@
+- debug:
+    msg: "{{ virtualenv_home }}"
+
 - name: Touchforms user
   delegate_to: "{{ groups.webworkers.0 }}"
   become: yes
