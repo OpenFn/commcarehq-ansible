@@ -6,7 +6,7 @@ NO_WWW_SITE_HOST: '{{ groups.proxy.0 }}'
 J2ME_SITE_HOST: 'j2me.{{ groups.proxy.0 }}'
 internal_domain_name: 'localdomain'
 
-testing: True
+testing: false
 
 etc_hosts_lines: []
 etc_hosts_lines_removed: []
@@ -189,14 +189,14 @@ couchdb2:
 couch_dbs:
   default:
     host: "{{ groups.couchdb2.0 }}"
-    port: 5984
+    port: 15984
     name: commcarehq
     username: "{{ localsettings_private.COUCH_USERNAME }}"
     password: "{{ localsettings_private.COUCH_PASSWORD }}"
     is_https: False
   users:
     host: "{{ groups.couchdb2.0 }}"
-    port: 5984
+    port: 15984
     name: commcarehq__users
     username: "{{ localsettings_private.COUCH_USERNAME }}"
     password: "{{ localsettings_private.COUCH_PASSWORD }}"
@@ -271,7 +271,7 @@ localsettings:
 #  MAPS_LAYERS:
 #  MEDIA_ROOT:
   OPEN_EXCHANGE_RATES_API_ID: "{{ localsettings_private.OPEN_EXCHANGE_RATES_API_ID }}"
-  PG_DATABASE_HOST: "{{ groups.postgresql.0 }}"
+  PG_DATABASE_HOST: "127.0.0.1"
   PG_DATABASE_NAME: commcarehq
   PG_DATABASE_PASSWORD: commcarehq
   PG_DATABASE_USER: commcarehq
