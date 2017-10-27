@@ -42,7 +42,6 @@ dev_users:
     - jschweers
     - jwilson
     - mkangia
-    - ncarnahan
     - npellegrino
     - nhooper
     - sgoyal
@@ -55,6 +54,7 @@ dev_users:
     - dmyung
     - jenkins_slave
     - brudolph
+    - ncarnahan
 
 django_port: 9010
 riakcs_port: 8080
