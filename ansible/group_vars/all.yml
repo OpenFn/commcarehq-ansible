@@ -26,6 +26,7 @@ dev_users:
     - tdowns
     - saga
     - rmckinley
+    - santosh
   absent:
     - astone
     - biyeun
