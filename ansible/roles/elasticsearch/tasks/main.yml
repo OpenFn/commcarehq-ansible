@@ -52,6 +52,10 @@
   tags:
     - es_conf
 
+- name: Install upstart for elasticsearch
+  become: yes
+  apt: name=upstart state=present
+
 - name: Copy Elasticsearch Upstart Conf
   become: yes
   template:
@@ -61,8 +65,8 @@
   tags:
     - es_conf
 
-- debug: msg="If you're just updating the ES conf then you sill need to restart the cluster. Use  the 'es_rolling_restart' playbook."
-  when: copy_elasticsearch_conf_result.changed
+# - debug: msg="If you're just updating the ES conf then you sill need to restart the cluster. Use  the 'es_rolling_restart' playbook."
+#   when: copy_elasticsearch_conf_result.changed
 
 - name: Create Elasticsearch data directories
   become: yes
@@ -79,7 +83,7 @@
 
 - name: Install elasticsearch python client
   become: yes
-  pip: 
+  pip:
     name: elasticsearch
     version: 1.9.0
 

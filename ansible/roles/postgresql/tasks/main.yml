@@ -87,6 +87,11 @@
   service: name=postgresql state=started
   tags: after-reboot
 
+- name: activate cluster
+  become: true
+  command: pg_ctlcluster 9.5 main start
+  tags: after-reboot
+
 - name: Create PostgreSQL users
   become: yes
   become_user: postgres

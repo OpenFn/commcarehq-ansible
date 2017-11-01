@@ -1,5 +1,15 @@
 ---
 # deploy-stack.yml
+# Necessary for clean install on Ubuntu 16.04...................................
+- hosts: all
+  gather_facts: False
+
+  tasks:
+  - name: install python 2
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+  tags:
+    - users
+# ..............................................................................
 
 - name: update apt cache
   hosts: all
@@ -20,8 +30,8 @@
 - include: deploy_webworker.yml
 # Should only be necessary for sms surveys but commcare-hq-deploy doesn't run
 # unless it's included.
-- include: deploy_touchforms.yml
-- include: deploy_formplayer.yml
+# - include: deploy_touchforms.yml
+# - include: deploy_formplayer.yml
 - include: deploy_mailrelay.yml
 - include: deploy_tmpreaper.yml
 - include: deploy_etckeeper.yml

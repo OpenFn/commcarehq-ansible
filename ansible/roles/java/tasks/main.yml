@@ -1,4 +1,7 @@
 ---
+- name: Add java7 repo
+  apt_repository: repo='ppa:openjdk-r/ppa' state=present
+
 - name: Install Java
   become: yes
   apt: name=openjdk-7-jdk state=present
