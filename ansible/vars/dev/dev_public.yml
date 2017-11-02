@@ -46,6 +46,7 @@ dev_users:
   present:
     - cchq
     - tdowns
+    - vagrant
     - santosh
     - saga
     - rmckinley

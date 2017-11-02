@@ -18,8 +18,6 @@
 - include: deploy_proxy.yml
 - include: deploy_shared_dir.yml
 - include: deploy_webworker.yml
-# Should only be necessary for sms surveys but commcare-hq-deploy doesn't run
-# unless it's included.
 - include: deploy_touchforms.yml
 - include: deploy_formplayer.yml
 - include: deploy_mailrelay.yml
