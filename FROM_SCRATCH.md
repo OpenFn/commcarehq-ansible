@@ -26,11 +26,13 @@
 `ansible-playbook -i inventories/monolith -e '@vars/dev/dev_private.yml' -e '@vars/dev/dev_public.yml' deploy_stack.yml -u ansible --ask-become-pass --tags='after-reboot'`
 
 ## commcare-hq-deploy
-1. cd `~/commcarehq-ansible/commcare-hq-ansible`
-1. Setup `fab/environments.yml`, `fab/fabfile.py`, and `/inventory/dev` for you `dev` box.
-2. `~/commcare-hq-deploy/python_env/bin/fab dev deploy -u root` fails with `OSError: [Errno 13] Permission denied: '/home/cchq/www/dev/releases/2017-10-30_17.15/python_env/lib/python2.7/site-packages/pytz-2015.7.dist-info/DESCRIPTION.rst'`
-4. `ssh root@<target-box-ip>`
+1. `cd ~/commcarehq-ansible/`
+2. `git submodule update --recursive --remote`
+3. cd `/commcare-hq-ansible`
+4. Setup `fab/environments.yml`, `fab/fabfile.py`, and `/inventory/dev` for you `dev` box.
+5. `~/commcare-hq-deploy/python_env/bin/fab dev deploy -u root` fails with `OSError: [Errno 13] Permission denied: '/home/cchq/www/dev/releases/2017-10-30_17.15/python_env/lib/python2.7/site-packages/pytz-2015.7.dist-info/DESCRIPTION.rst'`
+6. `ssh root@<target-box-ip>`
   1. `cd ~cchq/www/dev/current && chown -R cchq.cchq python_env`
   2. `ctrl-d`
-5. `./python_env/bin/fab dev deploy -u root`
-6. `./python_env/bin/fab dev deploy:resume=yes -u root`
+7. `./python_env/bin/fab dev deploy -u root`
+8. `./python_env/bin/fab dev deploy:resume=yes -u root`
