@@ -57,6 +57,14 @@
     - { role: nginx, when: proxy_type == 'nginx' and active_sites.enikshay_ssl == True, action: site, site_name: enikshay_ssl }
     - { role: nginx, when: proxy_type == 'nginx', action: restart }
 
+- name: PNA Proxy
+  hosts: pna_proxy
+  roles:
+    - { role: shared_dir }
+    - { role: nginx, when: proxy_type == 'nginx', action: install }
+    - { role: nginx, when: proxy_type == 'nginx' and active_sites.pna_ssl == True, action: site, site_name: pna_ssl }
+    - { role: nginx, when: proxy_type == 'nginx', action: restart }
+
 - name: Couchdb 2.0 Proxy
   hosts: couchdb2_proxy
   roles:
@@ -65,11 +73,19 @@
     - { role: nginx, when: proxy_type == 'nginx' and active_sites.couchdb2 == True, action: site, site_name: couchdb2 }
     - { role: nginx, when: proxy_type == 'nginx', action: restart }
 
+- name: Move logrotate to hourly
+  hosts:
+    - proxy
+    - couchdb2_proxy
+  become: true
+  roles:
+    - role: logrotate
+
 - name: Nginx log rolling configurations
-  hosts: 
+  hosts:
    - proxy
    - couchdb2_proxy
-  sudo: yes
+  become: true
   roles:
     - role: ansible-logrotate
       logrotate_scripts:
@@ -82,6 +98,8 @@
             - missingok
             - compress
             - delaycompress
-            - copytruncate
             - nocreate
             - notifempty
+            - sharedscripts
+          scripts:
+            postrotate: "[ -s /run/nginx.pid ] && kill -USR1 `cat /run/nginx.pid`"

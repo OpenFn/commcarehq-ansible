@@ -39,9 +39,7 @@ elasticsearch_memory: '4096m'
 elasticsearch_cluster_name: 'deves'
 #elasticsearch_node_name: '??'
 
-apache2_key_file: '../config/{{ deploy_env }}/ssl/swiss.commcarehq.org.key'
-apache2_cert_file: '../config/{{ deploy_env }}/ssl/swiss.commcarehq.org.crt'
-
+nginx_key_file: '../config/{{ deploy_env }}/ssl/swiss.commcarehq.org.key'
 nginx_combined_cert_file: '../config/{{ deploy_env }}/ssl/swiss.commcarehq.org.combined.crt'
 
 keystore_file: '../config/DimagiKeyStore'
@@ -168,7 +166,6 @@ localsettings:
   KISSMETRICS_KEY:
   MAPS_LAYERS: "{{ localsettings_private.MAPS_LAYERS }}"
   MIA_THE_DEPLOY_BOT_API: "{{ localsettings_private.MIA_THE_DEPLOY_BOT_API }}"
-  ONBOARDING_DOMAIN_TEST_DATE: (2017, 1, 2)
   OPEN_EXCHANGE_RATES_API_ID: "{{ localsettings_private.OPEN_EXCHANGE_RATES_API_ID }}"
   PG_DATABASE_HOST: "127.0.0.1"
   PG_DATABASE_NAME: commcarehq

@@ -4,9 +4,10 @@
   when: shared_drive_enabled
   apt:
     update_cache: yes
+    cache_valid_time: 7200
 
 - name: Install NFS packages
-  sudo: yes
+  become: yes
   when: shared_drive_enabled
   apt: name="{{ item }}" state=present
   with_items:
@@ -24,7 +25,7 @@
     - nfs
 
 - name: Create group with same GID
-  sudo: yes
+  become: yes
   group:
     name: "{{ shared_dir_groupname }}"
     state: present
